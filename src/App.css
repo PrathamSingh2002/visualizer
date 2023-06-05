@@ -84,4 +84,7 @@ button:hover{
   #sec1{
     width: 100%;
   }
+  #logo{
+    display: none;
+  }
 }
