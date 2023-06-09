@@ -38,13 +38,13 @@ function App() {
   async function place(j,ht){
     var a=document.getElementById(`${j}`)
     a.style.height=`${ht}vh` 
-    await delay(50) 
+    await delay(1) 
   }
   async function swap(j,i){
     var t=arr[j]
     arr[j]=arr[i]
     arr[i]=t
-    delay(50)
+    delay(1)
     var a=document.getElementById(`${j}`)
     var b=document.getElementById(`${i}`)
     a.style.height=`${arr[j]}vh`
@@ -55,7 +55,7 @@ function App() {
     var b=document.getElementById(`${i}`)
     a.style.backgroundColor="blue"
     b.style.backgroundColor="blue"
-    await delay(50)
+    await delay(1)
     a.style.backgroundColor="red"
     b.style.backgroundColor="red"
   }
