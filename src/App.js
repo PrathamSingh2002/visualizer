@@ -1,18 +1,73 @@
 import logo from './logo.svg';
 import './App.css';
 import './bar'
+import tl from "./tl.png"
 import { useEffect, useState } from 'react';
 import Bar from './bar';
-
+import Sidebar from './Sidebar';
+import { Route,Routes,Link } from 'react-router-dom';
+import Home from './Home';
+import Details from './Details';
+import play from './play.png'
+import res from './reset.png'
 function App() {
+  const name={
+    1:'Bubble Sort',
+    2:'Insertion Sort',
+    3:'Selection Sort',
+    4:'Quick Sort',
+    5:'Merge Sort',
+    6:'Radix Sort',
+  }
+  const [side,togg]=useState(true)
   const[arr,carr]=useState([])
-  const[l,cl]=useState(10)
+  const[algo,calgo]=useState(1)
+  const[l,cl]=useState(50)
+  const[running,cr]=useState(false)
   const slider=document.getElementById('slider')
+  function st(){
+    if(running){
+      return 0;
+    }
+    cr(true)
+    if(algo==1){
+      Bubblesort()
+    }
+    if(algo==2){
+      InsertionSort()
+    }
+    if(algo==3){
+      SelectionSort()
+    }
+    if(algo==4){
+      Quick()
+    }
+    if(algo==5){
+      MergeSort()
+    }
+    if(algo==6){
+      RadixSort()
+    }
+  }
   function slide(){
     cl(parseInt(slider.value))
 
   }
+  function toggle(){
+    togg(!side)
+    const el=document.getElementById('sbar')
+    if(side==true){
+      el.style.translate="100%"
+    }
+    else{
+      el.style.translate="-100%"
+    }
+
+  }
   function reset(){
+    if(running){
+      return 0;
+    }
     carr([])
     for(let i=0;i<l;i++){
       carr((a)=>[...a,Math.floor(Math.random()*80)])
@@ -208,6 +263,7 @@ function App() {
     for(let i=0;i<butt.length;i++){
       butt[i].disabled=false
     }
+    cr(false)
     resetcolor()
   }
   async function Bubblesort(){
@@ -220,6 +276,7 @@ function App() {
     for(let i=0;i<butt.length;i++){
       butt[i].disabled=false
     }
+    cr(false)
     resetcolor()
   }
   async function SelectionSort(){
@@ -232,6 +289,7 @@ function App() {
     for(let i=0;i<butt.length;i++){
       butt[i].disabled=false
     }
+    cr(false)
     resetcolor()
   }
   async function InsertionSort(){
@@ -244,6 +302,7 @@ function App() {
     for(let i=0;i<butt.length;i++){
       butt[i].disabled=false
     }
+    cr(false)
     resetcolor()
   }
   async function Quick(){
@@ -256,6 +315,8 @@ function App() {
     for(let i=0;i<butt.length;i++){
       butt[i].disabled=false
     }
+    
+    cr(false)
     resetcolor()
     
   }
@@ -269,42 +330,55 @@ function App() {
     for(let i=0;i<butt.length;i++){
       butt[i].disabled=false
     }
+    cr(false)
     resetcolor()
     
   }
   return (
     <div className='full'>
-    <div className='topbar'>
+      <div className='topbar'>
       <div id ='sec1'>
+      <div  className='button' onClick={()=>{toggle()}}>
+        <img src={tl} className='icon'/>
+      </div>                  
         <div id='logo'>Sorting Visualizer</div>                  
-        <button  className='button' onClick={()=>reset()}>reset</button>                  
-        <div className='drop'>
-          <button className='button'>Algorithms</button> 
-          <div className='dropi'>
-            <button className='button' onClick={()=>Bubblesort()}>BubbleSort</button> 
-            <button  className='button' onClick={()=>Quick()}>quickSort</button>                   
-            <button  className='button' onClick={()=>SelectionSort()}>SelectionSort</button>                   
-            <button  className='button' onClick={()=>InsertionSort()}>InsertionSort</button>                   
-            <button  className='button' onClick={()=>MergeSort()}>MergeSort</button>                   
-            <button  className='button' onClick={()=>RadixSort()}>RadixSort</button>                   
-          </div>   
-        </div>          
+                  
       </div>
-      <div style={{display:'flex',flexDirection:'row'}}>
-        <div style={{display:'flex',justifyContent:'center',alignItems:'center',color:'white',fontFamily:'monospace',flexDirection:'column-reverse'}}>
-          <input  className='button' id='slider' min='10' max='200'  type='range' onInput={()=>slide()}></input>
-          Bars : {l}
-        </div>
-      </div>          
+                
     </div>
-    <div className='box' >
+    
+      <Sidebar algo={calgo} toggle={toggle}/>
+    <Routes>
+      <Route path='/Algorithm' element={<div >
       {
-        <>
-          {arr.map((i,j)=><Bar len={l} id={j} ht={i}></Bar>)}
-        </>
+          <>
+            <div className='name'>
+              {name[algo]}
+            </div>
+            <div className='box'>
+              {arr.map((i,j)=><Bar len={l} id={j} ht={i}></Bar>)}
+            </div>
+            <div className='tools'>
+              <img className="stt" src={play} onClick={()=>{st()}} height="30px"></img>   
+              <img className='rss' src={res} onClick={()=>{reset()}} height="30px"></img>   
+              <div style={{display:'flex',flexDirection:'row'}}>
+              <div style={{display:'flex',justifyContent:'center',alignItems:'center',color:'white',fontFamily:'monospace',flexDirection:'column-reverse'}}>
+                <input  className='button' id='slider' min='10' max='200'  type='range' onInput={()=>slide()}></input>
+                Bars : {l}
+              </div>
+              </div>
+            </div>   
+            <div>
+            <Details algo={algo}/>
+            </div>
+            
+          </>
       }
       
-    </div>
+      </div>}/>
+      <Route path='/' element={<Home/>}/>
+
+    </Routes>
     </div>
   );
 }

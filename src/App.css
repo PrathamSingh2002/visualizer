@@ -6,26 +6,67 @@
 }
 .bar{
   margin:1px;
-  background-color:red;
+  background-color:#EA5455;
   transition:500ms;
 
 }
+.det{
+  padding: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+.css-fix {
+  white-space: pre-wrap; /* or pre-line */
+}
+.code{
+  display:flex;
+  flex-direction: column;
+  border: 2px solid orange;
+  border-radius: 10px;
+  padding :20px;
+  color:white;
+  font-size: 20;
+  white-space: pre-wrap;
+}
+.title{
+  color: white;
+  padding-bottom: 10px;
+  padding-left: 50px;
+  font-size: 50px;
+}
+.desc{
+  width: 500px;
+  color: white;
+  padding-left: 50px;
+  padding-right: 50px;
+  font-size: 20px;
+}
 .box{
   padding-bottom: 10px;
-  height:80vh;
+  height:600px;
   width:100vw;
   display: flex;
   flex-direction: row;
   align-items:last baseline;
   justify-content:center;
 }
+body{
+  height: 100vh;
+}
+#root{
+  height:max-content;
+  background-color: #1a1a1a;
+}
 .full{
+  height: 100%;
+  background-color:#1a1a1a;
   flex-direction: column;
   display: flex;
   justify-content: space-between;
 }
 .topbar{
-  height: 10vh;
+  height: 100px;
   align-items: center;
   display:flex;
   flex-direction: row;
@@ -44,7 +85,7 @@
   transition: opacity .2s;
 }
 #logo{
-  font-size: 20px;
+  font-size: 60px;
   font-family: monospace;
   color: #d3d3d3;
 }
@@ -87,4 +128,71 @@ button:hover{
   #logo{
     display: none;
   }
+}
+.name{
+  font-family:monospace;
+  color: white;
+  font-size: 40px;
+  margin: 20px;
+  display: flex;
+  justify-content:center
+}
+.sidebar{
+  position: absolute;
+  color:#fff;
+  top:0;
+  left:0;
+  height: 80vh;
+  width: 280px;
+  background-color:#1a1a1a;
+  transform:translateX(-100%);
+  transition: all 0.5s;
+  top:60px
+}
+.sidebar li{
+  list-style: none;
+  padding: 1rem 2rem;
+  border-bottom: solid rgba(255,255,255,0,1) 1px;
+}
+.link{
+  color:white;
+  text-decoration: none;
+}
+.icon{
+  position: absolute;
+  left:20px;
+  height: 50px;
+  z-index: 1;
+}
+.home{
+  padding: 100px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content:center;
+  align-items:center;
+}
+.tools{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content:space-evenly;
+  align-items: center;
+}
+.hometitle{
+  font-family: monospace;
+  color: #fff;
+  font-size: 50px;
+  background-color: #1a1a1a;
+}
+.hometext{
+  padding-top: 10px;
+  font-family: monospace;
+  color:whitesmoke;
+  font-size: 20px;
+}
+.hometext li{
+  padding:20px;
+  padding-left: 60px;
+  padding-right: 60px;
 }
