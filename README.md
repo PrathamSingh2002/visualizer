@@ -1,4 +1,3 @@
-
 Sorting Visualizer Web App
 Sorting Visualizer Demo
 
@@ -56,9 +55,4 @@ Push to the branch: git push origin feature/your-feature-name.
 Submit a pull request.
 License
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-Acknowledgments
-Thanks to Name for the inspiration and valuable feedback.
-Contact
-If you have any questions or suggestions, please feel free to reach out to me at your-email@example.com.
 
