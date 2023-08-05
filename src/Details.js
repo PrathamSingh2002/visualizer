@@ -211,7 +211,8 @@ function Details(prop){
     }
     return(
         <div className="det">
-            <div>
+                
+            <div className='dl'>
                 <div className="title">
                     Description
                 </div>
@@ -219,8 +220,7 @@ function Details(prop){
                     {desc[prop.algo]}
                 </div>
             </div>
-                
-            <div>
+            <div className="dr">
                 <div className="title">
                     Implementation    
                 </div>

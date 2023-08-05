@@ -19,7 +19,7 @@ function App() {
     5:'Merge Sort',
     6:'Radix Sort',
   }
-  const [side,togg]=useState(true)
+  const [side,togg]=useState(false)
   const[arr,carr]=useState([])
   const[algo,calgo]=useState(1)
   const[l,cl]=useState(50)
@@ -64,13 +64,22 @@ function App() {
     }
 
   }
+  function hide(){
+    if(side==false){
+      togg(true)
+      const el=document.getElementById('sbar')
+      el.style.translate="-100%"
+    }
+    
+
+  }
   function reset(){
     if(running){
       return 0;
     }
     carr([])
     for(let i=0;i<l;i++){
-      carr((a)=>[...a,Math.floor(Math.random()*80)])
+      carr((a)=>[...a,Math.floor(Math.random()*100)])
     }
   }
   function resetcolor(){
@@ -92,7 +101,7 @@ function App() {
   }
   async function place(j,ht){
     var a=document.getElementById(`${j}`)
-    a.style.height=`${ht}vh` 
+    a.style.height=`${ht}%` 
     await delay(1) 
   }
   async function swap(j,i){
@@ -102,8 +111,8 @@ function App() {
     delay(1)
     var a=document.getElementById(`${j}`)
     var b=document.getElementById(`${i}`)
-    a.style.height=`${arr[j]}vh`
-    b.style.height=`${arr[i]}vh`
+    a.style.height=`${arr[j]}%`
+    b.style.height=`${arr[i]}%`
   }
   async function comp(j,i){
     var a=document.getElementById(`${j}`)
@@ -335,21 +344,19 @@ function App() {
     
   }
   return (
-    <div className='full'>
+    <div className='full' onClick={()=>{
+      hide()
+    }}>
       <div className='topbar'>
-      <div id ='sec1'>
-      <div  className='button' onClick={()=>{toggle()}}>
-        <img src={tl} className='icon'/>
-      </div>                  
-        <div id='logo'>Sorting Visualizer</div>                  
-                  
+        <div id='logo'>Sorting Visualizer</div>                            
+        <div  className='button' onClick={()=>{toggle()}}>
+          <img src={tl} className='icon'/>
+        </div>                  
       </div>
-                
-    </div>
     
       <Sidebar algo={calgo} toggle={toggle}/>
     <Routes>
-      <Route path='/Algorithm' element={<div >
+      <Route path='/visualizer/Algorithm' element={<div >
       {
           <>
             <div className='name'>
@@ -363,7 +370,7 @@ function App() {
               <img className='rss' src={res} onClick={()=>{reset()}} height="30px"></img>   
               <div style={{display:'flex',flexDirection:'row'}}>
               <div style={{display:'flex',justifyContent:'center',alignItems:'center',color:'white',fontFamily:'monospace',flexDirection:'column-reverse'}}>
-                <input  className='button' id='slider' min='10' max='200'  type='range' onInput={()=>slide()}></input>
+                <input id='slider' min='10' max='200'  type='range' onInput={()=>slide()}></input>
                 Bars : {l}
               </div>
               </div>
@@ -376,7 +383,7 @@ function App() {
       }
       
       </div>}/>
-      <Route path='/' element={<Home/>}/>
+      <Route path='/visualizer/' element={<Home/>}/>
 
     </Routes>
     </div>
