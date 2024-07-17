@@ -1,392 +1,324 @@
-import logo from './logo.svg';
 import './App.css';
 import './bar'
 import tl from "./tl.png"
-import { useEffect, useState } from 'react';
 import Bar from './bar';
 import Sidebar from './Sidebar';
-import { Route,Routes,Link } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Home from './Home';
 import Details from './Details';
 import play from './play.png'
 import res from './reset.png'
+import React, { useState, useEffect } from 'react';
+
 function App() {
-  const name={
-    1:'Bubble Sort',
-    2:'Insertion Sort',
-    3:'Selection Sort',
-    4:'Quick Sort',
-    5:'Merge Sort',
-    6:'Radix Sort',
+  const name = {
+    1: 'Bubble Sort',
+    2: 'Insertion Sort',
+    3: 'Selection Sort',
+    4: 'Quick Sort',
+    5: 'Merge Sort',
+    6: 'Radix Sort',
   }
-  const [side,togg]=useState(false)
-  const[arr,carr]=useState([])
-  const[algo,calgo]=useState(1)
-  const[l,cl]=useState(50)
-  const[running,cr]=useState(false)
-  const slider=document.getElementById('slider')
-  function st(){
-    if(running){
-      return 0;
-    }
-    cr(true)
-    if(algo==1){
-      Bubblesort()
-    }
-    if(algo==2){
-      InsertionSort()
-    }
-    if(algo==3){
-      SelectionSort()
-    }
-    if(algo==4){
-      Quick()
-    }
-    if(algo==5){
-      MergeSort()
-    }
-    if(algo==6){
-      RadixSort()
-    }
-  }
-  function slide(){
-    cl(parseInt(slider.value))
+  const [side, togg] = useState(false)
+  const [arr, setArr] = useState([])
+  const [algo, setAlgo] = useState(1)
+  const [l, setL] = useState(50)
+  const [running, setRunning] = useState(false)
 
-  }
-  function toggle(){
-    togg(!side)
-    const el=document.getElementById('sbar')
-    if(side==true){
-      el.style.translate="100%"
-    }
-    else{
-      el.style.translate="-100%"
-    }
-
-  }
-  function hide(){
-    if(side==false){
-      togg(true)
-      const el=document.getElementById('sbar')
-      el.style.translate="-100%"
-    }
-    
-
-  }
-  function reset(){
-    if(running){
-      return 0;
-    }
-    carr([])
-    for(let i=0;i<l;i++){
-      carr((a)=>[...a,Math.floor(Math.random()*100)])
-    }
-  }
-  function resetcolor(){
-    const el=document.getElementsByClassName('bar')
-    for(let i=0;i<l;i++){
-      el[i].style.backgroundColor='red'
-    }  
-  }
-  useEffect(()=>{
+  useEffect(() => {
     reset()
-  },[l])
+  }, [l])
+
+  function toggle() {
+    togg(!side)
+    const el = document.getElementById('sbar')
+    if (side) {
+      el.style.translate = "100%"
+    } else {
+      el.style.translate = "-100%"
+    }
+  }
+
+  function hide() {
+    if (!side) {
+      togg(true)
+      const el = document.getElementById('sbar')
+      el.style.translate = "-100%"
+    }
+  }
+
+  function reset() {
+    if (running) return;
+    const newArr = Array.from({ length: l }, () => Math.floor(Math.random() * 100))
+    setArr(newArr)
+  }
+
+  function resetcolor() {
+    const el = document.getElementsByClassName('bar')
+    for (let i = 0; i < l; i++) {
+      el[i].style.backgroundColor = 'red'
+    }
+  }
+
+  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+  async function st() {
+    if (running) return;
+    setRunning(true)
+    switch (algo) {
+      case 1:
+        await bubbleSort()
+        break
+      case 2:
+        await insertionSort()
+        break
+      case 3:
+        await selectionSort()
+        break
+      case 4:
+        await quickSort()
+        break
+      case 5:
+        await mergeSort()
+        break
+      case 6:
+        await radixSort()
+        break
+      default:
+        console.log('Invalid algorithm')
+    }
+    setRunning(false)
+    resetcolor()
+  }
+
+  async function bubbleSort() {
+    let newArr = [...arr];
+    for (let i = 0; i < l; i++) {
+      for (let j = 0; j < l - 1 - i; j++) {
+        if (newArr[j] > newArr[j + 1]) {
+          [newArr[j], newArr[j + 1]] = [newArr[j + 1], newArr[j]];
+          setArr([...newArr]);
+          await sleep(10);
+        }
+      }
+    }
+  }
+
+  async function insertionSort() {
+    let newArr = [...arr];
+    for (let i = 1; i < l; i++) {
+      let key = newArr[i];
+      let j = i - 1;
+      while (j >= 0 && newArr[j] > key) {
+        newArr[j + 1] = newArr[j];
+        j = j - 1;
+        setArr([...newArr]);
+        await sleep(10);
+      }
+      newArr[j + 1] = key;
+      setArr([...newArr]);
+      await sleep(10);
+    }
+  }
+
+  async function selectionSort() {
+    let newArr = [...arr];
+    for (let i = 0; i < l; i++) {
+      let minIdx = i;
+      for (let j = i + 1; j < l; j++) {
+        if (newArr[j] < newArr[minIdx]) {
+          minIdx = j;
+        }
+      }
+      [newArr[i], newArr[minIdx]] = [newArr[minIdx], newArr[i]];
+      setArr([...newArr]);
+      await sleep(10);
+    }
+  }
+
+  async function quickSort() {
+    let newArr = [...arr];
+    await quickSortHelper(newArr, 0, l - 1);
+  }
+
+  async function quickSortHelper(arr, low, high) {
+    if (low < high) {
+      let pi = await partition(arr, low, high);
+      await quickSortHelper(arr, low, pi - 1);
+      await quickSortHelper(arr, pi + 1, high);
+    }
+  }
+
+  async function partition(arr, low, high) {
+    let pivot = arr[high];
+    let i = low - 1;
+    for (let j = low; j < high; j++) {
+      if (arr[j] < pivot) {
+        i++;
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+        setArr([...arr]);
+        await sleep(10);
+      }
+    }
+    [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
+    setArr([...arr]);
+    await sleep(10);
+    return i + 1;
+  }
+
+  async function mergeSort() {
+    let newArr = [...arr];
+    await mergeSortHelper(newArr, 0, l - 1);
+  }
+
+  async function mergeSortHelper(arr, left, right) {
+    if (left < right) {
+      const mid = Math.floor((left + right) / 2);
+      await mergeSortHelper(arr, left, mid);
+      await mergeSortHelper(arr, mid + 1, right);
+      await merge(arr, left, mid, right);
+    }
+  }
+
+  async function merge(arr, left, mid, right) {
+    const n1 = mid - left + 1;
+    const n2 = right - mid;
+    const L = new Array(n1);
+    const R = new Array(n2);
+
+    for (let i = 0; i < n1; i++) L[i] = arr[left + i];
+    for (let j = 0; j < n2; j++) R[j] = arr[mid + 1 + j];
+
+    let i = 0, j = 0, k = left;
+    while (i < n1 && j < n2) {
+      if (L[i] <= R[j]) {
+        arr[k] = L[i];
+        i++;
+      } else {
+        arr[k] = R[j];
+        j++;
+      }
+      k++;
+      setArr([...arr]);
+      await sleep(10);
+    }
+
+    while (i < n1) {
+      arr[k] = L[i];
+      i++;
+      k++;
+      setArr([...arr]);
+      await sleep(10);
+    }
+
+    while (j < n2) {
+      arr[k] = R[j];
+      j++;
+      k++;
+      setArr([...arr]);
+      await sleep(10);
+    }
+  }
+
+  async function radixSort() {
+    let newArr = [...arr];
+    const max = Math.max(...newArr);
+    
+    // Get the number of digits in the largest number
+    const maxDigits = Math.floor(Math.log10(max)) + 1;
   
-  function delay(ms){
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve();
-        },ms);
-    })
-  }
-  async function place(j,ht){
-    var a=document.getElementById(`${j}`)
-    a.style.height=`${ht}%` 
-    await delay(1) 
-  }
-  async function swap(j,i){
-    var t=arr[j]
-    arr[j]=arr[i]
-    arr[i]=t
-    delay(1)
-    var a=document.getElementById(`${j}`)
-    var b=document.getElementById(`${i}`)
-    a.style.height=`${arr[j]}%`
-    b.style.height=`${arr[i]}%`
-  }
-  async function comp(j,i){
-    var a=document.getElementById(`${j}`)
-    var b=document.getElementById(`${i}`)
-    a.style.backgroundColor="blue"
-    b.style.backgroundColor="blue"
-    await delay(1)
-    a.style.backgroundColor="red"
-    b.style.backgroundColor="red"
-  }
-  async function merge(i,j,m){
-    let left=[]
-    let right=[]
-    for(let k=0;k<m-i+1;k++){
-      left.push(arr[i+k])
-    }
-    for(let k=0;k<j-m;k++){
-      right.push(arr[m+k+1])
-    }
-    let a=0
-    let b=0
-    let c=i
-    while(a<m-i+1 && b<j-m){
-      await comp(i+a,m+b+1)
-      if(left[a]<right[b]){
-        arr[c]=left[a]
-        a++
-      }
-      else{
-        arr[c]=right[b]
-        b++
-      }
-      await place(c,arr[c])
-      c++
-    }
-    while(a<m-i+1){
-      arr[c]=left[a]
-      a++;
-      await place(c,arr[c])
-      c++
-    }
-    while(b<j-m){
-      arr[c]=right[b]
-      b++;
-      await place(c,arr[c])
-      c++
-    }
-    for(let k=i;k<=j;k++){
-      document.getElementById(`${k}`).style.backgroundColor='green'
-    }
-  } 
-  async function ms(i,j){
-    if(i<j){
-      let m=Math.floor((i+j)/2)
-      await ms(i,m)
-      await ms(m+1,j)
-      await merge(i,j,m)
-    }
-  } 
-  async function bbs(){
-    for(let i=0;i<l;i++){
-      for(let j=0;j<l-1-i;j++){
-        await comp(j,j+1)
-        if(arr[j]>arr[j+1]){
-          await swap(j,j+1)
-        }
-      }
-      document.getElementById(`${l-1-i}`).style.backgroundColor='green'
-    }
-  } 
-  async function ss(){
-    let x
-    let e
-    for(let i=0;i<l;i++){
-      x=arr[i]
-      e=i
-      for(let j=i;j<l;j++){
-        await comp(e,j)
-        if(arr[j]<x){
-          x=arr[j]
-          e=j
-        }
-      }
-      await swap(i,e)
-      document.getElementById(`${i}`).style.backgroundColor='green'
+    for (let digit = 0; digit < maxDigits; digit++) {
+      await countingSort(newArr, digit);
     }
   }
-  async function rs(){
-      await count(1)
-      await count(10)
-  }
-  async function count(p){
-    const temp=new Array(10).fill(0)
-    const c=[]
-    for(let i=0;i<l;i++){
-      temp[Math.floor(arr[i]/p)%10]++
-      c.push(arr[i])
+  
+  async function countingSort(arr, digit) {
+    const n = arr.length;
+    const output = new Array(n).fill(0);
+    const count = new Array(10).fill(0);
+  
+    // Store count of occurrences in count[]
+    for (let i = 0; i < n; i++) {
+      const index = Math.floor(arr[i] / Math.pow(10, digit)) % 10;
+      count[index]++;
     }
-    for(let i=1;i<10;i++){
-      temp[i]+=temp[i-1]
+  
+    // Change count[i] so that count[i] now contains actual
+    // position of this digit in output[]
+    for (let i = 1; i < 10; i++) {
+      count[i] += count[i - 1];
     }
-    for(let i=l-1;i>=0;i--){
-      temp[Math.floor(c[i]/p)%10]--
-      arr[temp[Math.floor(c[i]/p)%10]]=c[i]
-      await place(temp[Math.floor(c[i]/p)%10],arr[temp[Math.floor(c[i]/p)%10]])
+  
+    // Build the output array
+    for (let i = n - 1; i >= 0; i--) {
+      const index = Math.floor(arr[i] / Math.pow(10, digit)) % 10;
+      output[count[index] - 1] = arr[i];
+      count[index]--;
     }
-    
-  }
-  async function is(){
-    for(let i=0;i<l;i++){
-      let j=i-1
-      while(j>=0 && arr[j+1]<arr[j]){
-        await comp(j,j+1)
-        await swap(j,j+1)
-        j--
-      }
-      for(let k=0;k<=i;k++){
-        document.getElementById(`${k}`).style.backgroundColor='green'
-      }
-    }
-  }
-  async function piv(i,j){
-    var t=i-1
-    await swap(Math.floor(i+Math.random()*(j-i+1)),j)
-    for(var u=i;u<j;u++){
-      await comp(u,j)
-      if(arr[u]<arr[j]){
-        t++
-        await swap(t,u)
-        
-       
-      }
-          }
-    t++
-    await comp(t,j)
-    await swap(t,j)
-    return t
-  }
-  async function quicksort(i,j){
-    if(i==j){
-      document.getElementById(`${i}`).style.backgroundColor='green'
-    }
-    if(i<j){
-      var p=await piv(i,j)
-      document.getElementById(`${p}`).style.backgroundColor='green'
-      await quicksort(i,p-1)
-      await quicksort(p+1,j)
+  
+    // Copy the output array to arr[], so that arr[] now
+    // contains sorted numbers according to current digit
+    for (let i = 0; i < n; i++) {
+      arr[i] = output[i];
+      setArr([...arr]);
+      await sleep(10);
     }
   }
-  async function RadixSort(){
-    const butt=document.getElementsByClassName('button')
-    for(let i=0;i<butt.length;i++){
-      butt[i].disabled=true
-    }
-    await rs()
-    await delay(2000)
-    for(let i=0;i<butt.length;i++){
-      butt[i].disabled=false
-    }
-    cr(false)
-    resetcolor()
-  }
-  async function Bubblesort(){
-    const butt=document.getElementsByClassName('button')
-    for(let i=0;i<butt.length;i++){
-      butt[i].disabled=true
-    }
-    await bbs()
-    await delay(2000)
-    for(let i=0;i<butt.length;i++){
-      butt[i].disabled=false
-    }
-    cr(false)
-    resetcolor()
-  }
-  async function SelectionSort(){
-    const butt=document.getElementsByClassName('button')
-    for(let i=0;i<butt.length;i++){
-      butt[i].disabled=true
-    }
-    await ss()
-    await delay(2000)
-    for(let i=0;i<butt.length;i++){
-      butt[i].disabled=false
-    }
-    cr(false)
-    resetcolor()
-  }
-  async function InsertionSort(){
-    const butt=document.getElementsByClassName('button')
-    for(let i=0;i<butt.length;i++){
-      butt[i].disabled=true
-    }
-    await is()
-    await delay(2000)
-    for(let i=0;i<butt.length;i++){
-      butt[i].disabled=false
-    }
-    cr(false)
-    resetcolor()
-  }
-  async function Quick(){
-    const butt=document.getElementsByClassName('button')
-    for(let i=0;i<butt.length;i++){
-      butt[i].disabled=true
-    }
-    await quicksort(0,l-1)
-    await delay(2000)
-    for(let i=0;i<butt.length;i++){
-      butt[i].disabled=false
-    }
-    
-    cr(false)
-    resetcolor()
-    
-  }
-  async function MergeSort(){
-    const butt=document.getElementsByClassName('button')
-    for(let i=0;i<butt.length;i++){
-      butt[i].disabled=true
-    }
-    await ms(0,l-1)
-    await delay(2000)
-    for(let i=0;i<butt.length;i++){
-      butt[i].disabled=false
-    }
-    cr(false)
-    resetcolor()
-    
-  }
+
   return (
-    <div className='full' onClick={()=>{
-      hide()
-    }}>
+    <div className='full' onClick={() => { hide() }}>
       <div className='topbar'>
-        <div id='logo'>Sorting Visualizer</div>                            
-        <div  className='button' onClick={()=>{toggle()}}>
-          <img src={tl} className='icon'/>
-        </div>                  
+        <div id='logo'>Sorting Visualizer</div>
+        <div className='button' onClick={() => { toggle() }}>
+          <img src={tl} className='icon' alt="Toggle Sidebar" />
+        </div>
       </div>
-    
-      <Sidebar algo={calgo} toggle={toggle}/>
-    <Routes>
-      <Route path='/visualizer/Algorithm' element={<div >
-      {
-          <>
+
+      <Sidebar algo={setAlgo} toggle={toggle} />
+      <Routes>
+        <Route path='/visualizer/Algorithm' element={
+          <div>
             <div className='name'>
               {name[algo]}
             </div>
             <div className='box'>
-              {arr.map((i,j)=><Bar len={l} id={j} ht={i}></Bar>)}
+              {arr.map((i, j) => 
+                <Bar
+                key={j}
+                id={j}
+                len={arr.length}
+                ht={i}
+                color={running ? '#FF4136' : '#4CAF50'}
+                />
+              )}
             </div>
             <div className='tools'>
-              <img className="stt" src={play} onClick={()=>{st()}} height="30px"></img>   
-              <img className='rss' src={res} onClick={()=>{reset()}} height="30px"></img>   
-              <div style={{display:'flex',flexDirection:'row'}}>
-              <div style={{display:'flex',justifyContent:'center',alignItems:'center',color:'white',fontFamily:'monospace',flexDirection:'column-reverse'}}>
-                <input id='slider' min='10' max='200'  type='range' onInput={()=>slide()}></input>
-                Bars : {l}
+              <img className="stt" src={play} onClick={() => { st() }} height="30px" alt="Start" />
+              <img className='rss' src={res} onClick={() => { reset() }} height="30px" alt="Reset" />
+              <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'white', fontFamily: 'monospace', flexDirection: 'column-reverse' }}>
+                  <input
+                    id='slider'
+                    min='10'
+                    max='200'
+                    type='range'
+                    value={l}
+                    onChange={(e) => setL(parseInt(e.target.value))}
+                    disabled={running}
+                  />
+                  Bars : {l}
+                </div>
               </div>
-              </div>
-            </div>   
-            <div>
-            <Details algo={algo}/>
             </div>
-            
-          </>
-      }
-      
-      </div>}/>
-      <Route path='/visualizer/' element={<Home/>}/>
-
-    </Routes>
+            <div>
+              <Details algo={algo} />
+            </div>
+          </div>
+        } />
+        <Route path='/visualizer/' element={<Home />} />
+      </Routes>
     </div>
   );
 }
+
 export default App;
